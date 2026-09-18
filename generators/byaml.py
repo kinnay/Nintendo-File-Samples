@@ -6,6 +6,12 @@ import math
 
 
 class BYAMLGenerator(Generator):
+    """
+    This folder contains test cases for the
+    [BYAML file format](https://nintendo-formats.com/libs/common/byaml.html).
+    Currently, tests are available for BYAML version 1 to 5.
+    """
+
     def __init__(self):
         super().__init__("byaml")
         self._generators = {
@@ -19,10 +25,15 @@ class BYAMLGenerator(Generator):
         }
 
     def generate_empty(self) -> bytes:
+        """A basic file that contains an empty dictionary."""
         file = byaml.BYAMLFile()
         return file.save()
 
     def generate_values(self) -> bytes:
+        """
+        A file that contains basic data types, such as integers and strings.
+        """
+
         root = byaml.BYAMLArray([
             byaml.BYAMLBool(False),
             byaml.BYAMLBool(True),
@@ -41,6 +52,11 @@ class BYAMLGenerator(Generator):
         return file.save()
 
     def generate_values_v5(self) -> bytes:
+        """
+        A file that contains basic types that were added in later BYAML
+        versions, such as binary data, unsigned integers and 64-bit values.
+        """
+
         file = byaml.BYAMLFile()
         file.version = 5
         file.root = byaml.BYAMLArray([
@@ -55,6 +71,8 @@ class BYAMLGenerator(Generator):
         return file.save()
 
     def generate_collections(self) -> bytes:
+        """A file that contains an array and a dictionary."""
+
         root = byaml.BYAMLDict({
             "array": byaml.BYAMLArray([
                 byaml.BYAMLInt(0),
@@ -71,6 +89,8 @@ class BYAMLGenerator(Generator):
         return file.save()
 
     def generate_little_endian(self) -> bytes:
+        """A file that uses little-endian byte order."""
+
         root = byaml.BYAMLArray([
             byaml.BYAMLInt(12345),
             byaml.BYAMLFloat(1234.5),
@@ -82,6 +102,11 @@ class BYAMLGenerator(Generator):
         return file.save()
 
     def generate_mariokart8(self) -> bytes:
+        """
+        A file that uses the binary data table that is only seen in
+        Mario Kart 8.
+        """
+
         file = byaml.BYAMLFile()
         file.has_binary_table = True
         file.root = byaml.BYAMLArray([
@@ -91,6 +116,11 @@ class BYAMLGenerator(Generator):
         return file.save()
 
     def generate_cycle(self) -> bytes:
+        """
+        A file that contains an array and dictionary that refer to each other in
+        a cycle.
+        """
+
         array = byaml.BYAMLArray()
         dict = byaml.BYAMLDict()
         dict.value = {"array": array}

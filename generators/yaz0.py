@@ -7,6 +7,11 @@ import random
 
 
 class Yaz0Generator(Generator):
+    """
+    This folder contains test cases for the
+    [Yaz0 file format](https://nintendo-formats.com/libs/sead/yaz0.html).
+    """
+    
     def __init__(self):
         super().__init__("yaz0")
         self._generators = {
@@ -17,6 +22,8 @@ class Yaz0Generator(Generator):
         }
     
     def generate_simple(self) -> None:
+        """A basic test case with a repetitive payload."""
+
         data = b"Hello" * 20
 
         file = yaz0.Yaz0File()
@@ -25,6 +32,8 @@ class Yaz0Generator(Generator):
         return file.save()
     
     def generate_random(self) -> None:
+        """8 KB of random data compressed."""
+
         # Generate 8 KB of random data with a constant seed
         random.seed(123)
         data = bytes(random.getrandbits(8) for i in range(8192))
@@ -35,6 +44,11 @@ class Yaz0Generator(Generator):
         return file.save()
     
     def generate_weak(self) -> None:
+        """
+        This test case uses the weakest compression level, which increases the
+        file size.
+        """
+
         data = b"Hello" * 20
 
         file = yaz0.Yaz0File()
@@ -43,6 +57,13 @@ class Yaz0Generator(Generator):
         return file.save()
     
     def generate_alignment(self) -> None:
+        """
+        This file specifies a minimum required alignment in the header. The
+        payload contains a
+        [SARC file](https://nintendo-formats.com/libs/sead/sarc.html) in which
+        every file is aligned to 256 bytes.
+        """
+
         archive = sarc.SARCFile()
         archive.alignment = 256
         archive.files["file1.txt"] = b"File 1"
